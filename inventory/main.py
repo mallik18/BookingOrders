@@ -1,5 +1,9 @@
+from email.policy import HTTP
+from math import prod
+from os import stat
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from redis_om import get_redis_connection, HashModel, NotFoundError
 
 # Fastapi instance
@@ -55,3 +59,11 @@ def get(pk: str):
         return Product.get(pk)
     except NotFoundError:   #redis exception
         raise HTTPException(status_code=404, detail="Item not found")   # HTTPExecption from fastapi
+
+
+@app.delete('/products/{pk}')
+def delete(pk: str):
+    if(Product.delete(pk)):     # delete a particular item with key if present return 1
+        return JSONResponse("Item deleted", status_code= 200)
+    else:
+        return JSONResponse("Item not found", status_code= 400)
