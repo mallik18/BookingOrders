@@ -1,6 +1,3 @@
-from email.policy import HTTP
-from math import prod
-from os import stat
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
