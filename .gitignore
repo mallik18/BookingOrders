@@ -2,3 +2,4 @@ venv/
 inventory/__pycache__/
 docs-redis.txt
 dump.rdb
+payment/__pycache__/
