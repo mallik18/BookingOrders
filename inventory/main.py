@@ -15,8 +15,8 @@ app.add_middleware(
 )
 
 # redis localhost connection
-redis = get_redis_connection(
-    host = "127.0.0.1",
+redis_conn = get_redis_connection(
+    host = "localhost",
     port = 6379,
     password = "",
     decode_responses = True
@@ -30,7 +30,7 @@ class Product(HashModel):
     quantity : int
 
     class Meta:
-        database = redis
+        database = redis_conn
 
 @app.get('/products')
 def all():
@@ -55,7 +55,7 @@ def get(pk: str):
     try:
         return Product.get(pk)
     except NotFoundError:   #redis exception
-        raise HTTPException(status_code=404, detail="Item not found")   # HTTPExecption from fastapi
+        raise HTTPException(status_code=404, detail="Item not found", headers={"X-Error": "There goes my error"},)   # HTTPExecption from fastapi
 
 
 @app.delete('/products/{pk}')
