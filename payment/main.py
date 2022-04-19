@@ -19,7 +19,7 @@ app.add_middleware(
 )
 
 # redis localhost connection
-redis_payment = get_redis_connection(
+redis_conn = get_redis_connection(
     host = "127.0.0.1",
     port = 6379,
 #    db = "redis_payment",
@@ -37,7 +37,7 @@ class Order(HashModel):
     status: str     # pending, completed, refunded
 
     class Meta:
-        database = redis_payment
+        database = redis_conn
 
 @app.get("/orders/{pk}")
 def get(pk: str):
@@ -69,3 +69,7 @@ def order_completed(order: Order):
     time.sleep(5)
     order.status = 'completed'
     order.save()
+    
+    order = dict(order)
+
+    redis_conn.xadd('order_completed', order, '*')
